@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [MedicalHistory]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Database [MedicalHistory]    Script Date: 2023/02/17 10:24:18 ******/
 CREATE DATABASE [MedicalHistory]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -82,14 +82,14 @@ ALTER DATABASE [MedicalHistory] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CL
 GO
 USE [MedicalHistory]
 GO
-/****** Object:  Table [dbo].[Contact]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[Contact]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Contact](
 	[id] [uniqueidentifier] NOT NULL,
-	[phone] [nvarchar](255) NULL,
+	[phone] [varchar](10) NULL,
 	[email] [nvarchar](255) NULL,
  CONSTRAINT [PK_Contact] PRIMARY KEY CLUSTERED 
 (
@@ -97,21 +97,21 @@ CREATE TABLE [dbo].[Contact](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Dose]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[Dose]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Dose](
 	[id] [uniqueidentifier] NOT NULL,
-	[description] [nvarchar](255) NOT NULL,
+	[description] [varchar](255) NOT NULL,
  CONSTRAINT [PK_Dose] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Medication]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[Medication]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -125,7 +125,7 @@ CREATE TABLE [dbo].[Medication](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Patient]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[Patient]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -139,14 +139,14 @@ CREATE TABLE [dbo].[Patient](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Person]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[Person]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Person](
 	[id] [uniqueidentifier] NOT NULL,
-	[idNumber] [nchar](13) NOT NULL,
+	[idNumber] [varchar](13) NOT NULL,
 	[name] [nvarchar](255) NOT NULL,
 	[surname] [nvarchar](255) NOT NULL,
  CONSTRAINT [PK__Person] PRIMARY KEY CLUSTERED 
@@ -155,7 +155,7 @@ CREATE TABLE [dbo].[Person](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Prescription]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[Prescription]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -163,19 +163,19 @@ GO
 CREATE TABLE [dbo].[Prescription](
 	[id] [uniqueidentifier] NOT NULL,
 	[medicationId] [uniqueidentifier] NOT NULL,
+	[doseId] [uniqueidentifier] NOT NULL,
 	[patientId] [uniqueidentifier] NOT NULL,
 	[professionalId] [uniqueidentifier] NOT NULL,
 	[startdate] [datetime] NOT NULL,
 	[endate] [datetime] NOT NULL,
 	[cancelledDate] [datetime] NULL,
-	[doseId] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK__Prescription] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Procedure]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[Procedure]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -183,30 +183,30 @@ GO
 CREATE TABLE [dbo].[Procedure](
 	[id] [uniqueidentifier] NOT NULL,
 	[patientId] [uniqueidentifier] NOT NULL,
-	[doctorId] [uniqueidentifier] NOT NULL,
-	[date] [datetime] NOT NULL,
+	[professionalId] [uniqueidentifier] NOT NULL,
 	[typeId] [uniqueidentifier] NOT NULL,
+	[date] [datetime] NULL,
  CONSTRAINT [PK_Procedure] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ProcedureType]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[ProcedureType]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[ProcedureType](
 	[id] [uniqueidentifier] NOT NULL,
-	[description] [nvarchar](255) NOT NULL,
+	[description] [varchar](255) NOT NULL,
  CONSTRAINT [PK_ProcedureType] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Professional]    Script Date: 2023/02/15 18:25:01 ******/
+/****** Object:  Table [dbo].[Professional]    Script Date: 2023/02/17 10:24:18 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -253,20 +253,20 @@ REFERENCES [dbo].[Professional] ([id])
 GO
 ALTER TABLE [dbo].[Person] CHECK CONSTRAINT [FK_Person_Professional]
 GO
-ALTER TABLE [dbo].[Prescription]  WITH CHECK ADD  CONSTRAINT [FK__Prescript__medication] FOREIGN KEY([medicationId])
-REFERENCES [dbo].[Medication] ([id])
-GO
-ALTER TABLE [dbo].[Prescription] CHECK CONSTRAINT [FK__Prescript__medication]
-GO
 ALTER TABLE [dbo].[Prescription]  WITH CHECK ADD  CONSTRAINT [FK_Prescription_Dose] FOREIGN KEY([doseId])
 REFERENCES [dbo].[Dose] ([id])
 GO
 ALTER TABLE [dbo].[Prescription] CHECK CONSTRAINT [FK_Prescription_Dose]
 GO
-ALTER TABLE [dbo].[Prescription]  WITH CHECK ADD  CONSTRAINT [FK_Prescription_Patient1] FOREIGN KEY([patientId])
+ALTER TABLE [dbo].[Prescription]  WITH CHECK ADD  CONSTRAINT [FK_Prescription_Medication] FOREIGN KEY([medicationId])
+REFERENCES [dbo].[Medication] ([id])
+GO
+ALTER TABLE [dbo].[Prescription] CHECK CONSTRAINT [FK_Prescription_Medication]
+GO
+ALTER TABLE [dbo].[Prescription]  WITH CHECK ADD  CONSTRAINT [FK_Prescription_Patient] FOREIGN KEY([patientId])
 REFERENCES [dbo].[Patient] ([id])
 GO
-ALTER TABLE [dbo].[Prescription] CHECK CONSTRAINT [FK_Prescription_Patient1]
+ALTER TABLE [dbo].[Prescription] CHECK CONSTRAINT [FK_Prescription_Patient]
 GO
 ALTER TABLE [dbo].[Prescription]  WITH CHECK ADD  CONSTRAINT [FK_Prescription_Professional] FOREIGN KEY([professionalId])
 REFERENCES [dbo].[Professional] ([id])
@@ -283,7 +283,7 @@ REFERENCES [dbo].[ProcedureType] ([id])
 GO
 ALTER TABLE [dbo].[Procedure] CHECK CONSTRAINT [FK_Procedure_ProcedureType]
 GO
-ALTER TABLE [dbo].[Procedure]  WITH CHECK ADD  CONSTRAINT [FK_Procedure_Professional] FOREIGN KEY([doctorId])
+ALTER TABLE [dbo].[Procedure]  WITH CHECK ADD  CONSTRAINT [FK_Procedure_Professional] FOREIGN KEY([professionalId])
 REFERENCES [dbo].[Professional] ([id])
 GO
 ALTER TABLE [dbo].[Procedure] CHECK CONSTRAINT [FK_Procedure_Professional]
