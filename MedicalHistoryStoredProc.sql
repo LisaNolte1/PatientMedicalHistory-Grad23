@@ -32,19 +32,22 @@ GO
 EXEC uspGetPatientDetailsByID 'B551F2C8-8380-491B-A51F-436E51CDD08F';
 GO
 
+USE MedicalHistory;
+GO
+
 --FULL PATIENT HISTORY VIEW--
 --Patient detials [id,name, surname,idnum,contact,prescriptions,procedure,doctor]--
 CREATE VIEW [Full_Patient_History]
 AS
 SELECT p.id, p.name, p.surname, p.idNumber, c.phone, c.email, m.name AS Medication,
 	   d.description AS Doseage, pr.startdate, pr.endate, pr.cancelledDate, prct.description AS PateintProcedure, prc.date AS ProcedureDate
-FROM Person p
-INNER JOIN Contact c ON c.id = p.id
-INNER JOIN Prescription pr ON pr.patientId = p.id
-INNER JOIN Medication m ON pr.medicationId = m.id
-INNER JOIN Dose d ON d.id =pr.doseId
-INNER JOIN PatientProcedure prc ON prc.patientId = p.id
-INNER JOIN ProcedureType prct ON prct.id = prc.typeId;
+FROM dbo.Person p
+FULL OUTER JOIN Contact c ON c.id = p.id
+FULL OUTER JOIN Prescription pr ON pr.patientId = p.id
+FULL OUTER JOIN Medication m ON pr.medicationId = m.id
+FULL OUTER JOIN Dose d ON d.id =pr.doseId
+FULL OUTER JOIN PatientProcedure prc ON prc.patientId = p.id
+FULL OUTER JOIN ProcedureType prct ON prct.id = prc.typeId;
 GO
 
 SELECT * FROM [Full_Patient_History];
