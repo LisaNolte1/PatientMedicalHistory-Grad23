@@ -17,7 +17,7 @@ VALUES(@medicationId, @patientId, @professionalId, @startdate, @endate, @cancell
 GO
 
 --SELECT PATIENT DETAILS--
-CREATE PROCEDURE [dbo].[uspGetPatientDetailsByID]
+CREATE OR ALTER PROCEDURE [dbo].[uspGetPatientDetailsByID]
 @patientId uniqueidentifier
 AS
 BEGIN
@@ -37,18 +37,30 @@ GO
 
 --FULL PATIENT HISTORY VIEW--
 --Patient detials [id,name, surname,idnum,contact,prescriptions,procedure,doctor]--
-CREATE VIEW [Full_Patient_History]
+CREATE OR ALTER VIEW [Patient_Prescription_History]
 AS
-SELECT p.id, p.name, p.surname, p.idNumber, c.phone, c.email, m.name AS Medication,
-	   d.description AS Doseage, pr.startdate, pr.endate, pr.cancelledDate, prct.description AS PateintProcedure, prc.date AS ProcedureDate
+SELECT p.id AS PersonID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email, m.name AS [Medication Name],
+	   d.description AS [Medication Doseage], pr.startdate AS [Prescription Start Date], pr.endate AS [Prescription End Date], pr.cancelledDate AS [Prescription Cancelled Date]
 FROM dbo.Person p
-FULL OUTER JOIN Contact c ON c.id = p.id
-FULL OUTER JOIN Prescription pr ON pr.patientId = p.id
-FULL OUTER JOIN Medication m ON pr.medicationId = m.id
-FULL OUTER JOIN Dose d ON d.id =pr.doseId
-FULL OUTER JOIN PatientProcedure prc ON prc.patientId = p.id
-FULL OUTER JOIN ProcedureType prct ON prct.id = prc.typeId;
+LEFT JOIN dbo.Patient pa ON pa.id = p.id
+LEFT JOIN Contact c ON c.id = pa.contactId
+LEFT JOIN Prescription pr ON pr.patientId = p.id
+LEFT JOIN Medication m ON pr.medicationId = m.id
+LEFT JOIN Dose d ON d.id = pr.doseId
 GO
 
-SELECT * FROM [Full_Patient_History];
+SELECT * FROM [Patient_Prescription_History];
+GO
+
+CREATE OR ALTER VIEW [Patient_Procedure_History]
+AS
+SELECT p.id AS PersonID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email, prc.date AS [Procedure Date], prct.description AS [Procedure Type]
+FROM dbo.Person p
+LEFT JOIN dbo.Patient pa ON pa.id = p.id
+LEFT JOIN Contact c ON c.id = pa.contactId
+LEFT JOIN PatientProcedure prc ON prc.patientId = p.id
+LEFT JOIN ProcedureType prct ON prct.id = prc.typeId;
+GO
+
+SELECT * FROM [Patient_Procedure_History];
 GO
