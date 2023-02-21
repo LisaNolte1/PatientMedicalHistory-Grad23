@@ -2,7 +2,7 @@ USE MedicalHistory;
 GO
 
 --INSERT NEW PRESCRIPTION--
-CREATE PROCEDURE [dbo].[uspInsertNewPrescription]
+CREATE OR ALTER PROCEDURE [dbo].[uspInsertNewPrescription]
 @medicationId uniqueidentifier,
 @patientId uniqueidentifier,
 @professionalId uniqueidentifier,
@@ -26,9 +26,6 @@ INNER JOIN Person pr ON pr.id = p.id
 INNER JOIN Contact c ON c.id = p.contactId
 WHERE p.id = @patientId;
 END
-GO
-
-EXEC uspGetPatientDetailsByID 'B551F2C8-8380-491B-A51F-436E51CDD08F';
 GO
 
 --FULL PATIENT HISTORY VIEW--
