@@ -1,7 +1,6 @@
 USE MedicalHistory;
 GO
 
-
 --INSERT NEW PRESCRIPTION--
 CREATE PROCEDURE [dbo].[uspInsertNewPrescription]
 @medicationId uniqueidentifier,
@@ -32,11 +31,7 @@ GO
 EXEC uspGetPatientDetailsByID 'B551F2C8-8380-491B-A51F-436E51CDD08F';
 GO
 
-USE MedicalHistory;
-GO
-
 --FULL PATIENT HISTORY VIEW--
---Patient detials [id,name, surname,idnum,contact,prescriptions,procedure,doctor]--
 CREATE OR ALTER VIEW [Patient_Prescription_History]
 AS
 SELECT p.id AS PersonID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email, m.name AS [Medication Name],
