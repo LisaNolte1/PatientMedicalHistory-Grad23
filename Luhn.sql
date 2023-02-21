@@ -52,8 +52,7 @@ GO
 CREATE OR ALTER FUNCTION ValidateID(@id varchar(13)) RETURNS bit
 AS 
 BEGIN
-	-- TODO: Implement ValidateID
-	RETURN 0;
+	RETURN IIF((LEN(@id) = 13 AND (SUBSTRING(@id, 11, 1) = '1' OR SUBSTRING(@id, 10, 1) = '0') AND CheckLuhn(id, 12) = 1), 1, 0)
 END
 GO
 
