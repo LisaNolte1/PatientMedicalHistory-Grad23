@@ -1,4 +1,4 @@
-USE MedicalHistory;
+USE [MedicalHistory];
 GO
 
 --INSERT NEW PRESCRIPTION--
@@ -33,7 +33,7 @@ CREATE OR ALTER VIEW [Patient_Prescription_History]
 AS
 SELECT p.id AS PersonID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email, m.name AS [Medication Name],
 	   d.description AS [Medication Doseage], pr.startdate AS [Prescription Start Date], pr.endate AS [Prescription End Date], pr.cancelledDate AS [Prescription Cancelled Date]
-FROM dbo.Person p
+FROM Person p
 LEFT JOIN dbo.Patient pa ON pa.id = p.id
 LEFT JOIN Contact c ON c.id = pa.contactId
 LEFT JOIN Prescription pr ON pr.patientId = p.id
@@ -47,10 +47,10 @@ GO
 CREATE OR ALTER VIEW [Patient_Procedure_History]
 AS
 SELECT p.id AS PersonID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email, prc.date AS [Procedure Date], prct.description AS [Procedure Type]
-FROM dbo.Person p
+FROM Person p
 LEFT JOIN dbo.Patient pa ON pa.id = p.id
 LEFT JOIN Contact c ON c.id = pa.contactId
-LEFT JOIN PatientProcedure prc ON prc.patientId = p.id
+LEFT JOIN [Procedure] prc ON prc.patientId = p.id
 LEFT JOIN ProcedureType prct ON prct.id = prc.typeId;
 GO
 
