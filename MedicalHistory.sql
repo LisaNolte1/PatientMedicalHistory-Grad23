@@ -1,10 +1,11 @@
 USE [master]
 GO
 
-/*
-DROP DATABASE IF EXISTS [MedicalHistory]
+-- Don't touch this
+DECLARE @verysafesafetynet bit = 0;
+IF @verysafesafetynet = 1
+	DROP DATABASE IF EXISTS [MedicalHistory]
 GO
-*/
 
 CREATE DATABASE [MedicalHistory]
 GO
