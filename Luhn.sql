@@ -15,7 +15,7 @@ BEGIN
 
 	IF LEN(@value) >= @len AND dbo.OnlyNums(@value) = 1
 	BEGIN
-		DECLARE @mult int = 1,
+		DECLARE @mult int = 2,
 				@digit tinyint = 0,
 				@digits int = 0,
 				@checksum int = 0,
@@ -38,7 +38,7 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER FUNCTION CheckLuhn(@value varchar(MAX), @len int) RETURNS int
+CREATE OR ALTER FUNCTION CheckLuhn(@value varchar(MAX), @len int) RETURNS bit
 AS
 BEGIN
 	DECLARE @zero tinyint = ASCII('0');
@@ -49,19 +49,17 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER FUNCTION CheckDate(@idDate varchar(6)) RETURNS bit
-AS
-BEGIN
-	DECLARE @currentDate datetime = CONVERT(VARCHAR(6), GETDATE(), 12)
-	RETURN IIF(((TRY_CAST(CONCAT('19', @idDate) AS DATE) != NULL OR TRY_CAST(CONCAT('20', @idDate) AS DATE) != NULL) AND CAST(@idDate AS DATE) < @currentDate), 1, 0)
-END
-GO
-
 CREATE OR ALTER FUNCTION ValidateID(@id varchar(13)) RETURNS bit
 AS 
 BEGIN
-	RETURN IIF((LEN(@id) = 13 AND (SUBSTRING(@id, 11, 1) = '1' OR SUBSTRING(@id, 10, 1) = '0') AND CheckLuhn(id, 12) = 1
-	AND CheckDate(SUBSTRING(@id, 1, 6)) = 1), 1, 0)
+	DECLARE @YYMMDD varchar(6) = SUBSTRING(@id, 1, 6);
+	DECLARE @C varchar = SUBSTRING(@id, 11, 1);
+	DECLARE @date datetime = TRY_CAST(@YYMMDD AS DATE);
+
+	RETURN IIF(LEN(@id) = 13
+		AND (@C = '0' OR @C = '1')
+		AND dbo.CheckLuhn(@id, 12) = 1
+		AND @date IS NOT NULL, 1, 0);
 END
 GO
 
@@ -72,11 +70,16 @@ SELECT id,
 	FROM (
 	VALUES
 		('YYMMDDSSSSCAZ'), -- Clearly not a valid ID, but nice to test.
+		('7506200000189'),
+		('8701110000184'),
+		('8901030000187'),
+		('0105020000185'),
+		('0808290000187'),
+		('7601220000184'),
+		('7711170000181'),
+		('2608080000183'),
+		('8105080000184'),
+		('1703040000182'),
 		('0000000000000'),
-		('1111111111112'),
-		('2222222222224'),
-		('3333333333336'),
-		('4444444444448'),
-		('1234567890123'),
-		('12345'        ))
+		('1111111111112'))
 	AS T(id)
