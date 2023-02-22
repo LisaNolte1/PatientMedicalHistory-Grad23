@@ -49,10 +49,19 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER FUNCTION CheckDate(@idDate varchar(6)) RETURNS bit
+AS
+BEGIN
+	DECLARE @currentDate datetime = CONVERT(VARCHAR(6), GETDATE(), 12)
+	RETURN IIF(((TRY_CAST(CONCAT('19', @idDate) AS DATE) != NULL OR TRY_CAST(CONCAT('20', @idDate) AS DATE) != NULL) AND CAST(@idDate AS DATE) < @currentDate), 1, 0)
+END
+GO
+
 CREATE OR ALTER FUNCTION ValidateID(@id varchar(13)) RETURNS bit
 AS 
 BEGIN
-	RETURN IIF((LEN(@id) = 13 AND (SUBSTRING(@id, 11, 1) = '1' OR SUBSTRING(@id, 10, 1) = '0') AND CheckLuhn(id, 12) = 1), 1, 0)
+	RETURN IIF((LEN(@id) = 13 AND (SUBSTRING(@id, 11, 1) = '1' OR SUBSTRING(@id, 10, 1) = '0') AND CheckLuhn(id, 12) = 1
+	AND CheckDate(SUBSTRING(@id, 1, 6)) = 1), 1, 0)
 END
 GO
 
