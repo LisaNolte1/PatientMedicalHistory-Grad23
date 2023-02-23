@@ -82,31 +82,26 @@ VALUES
 GO
 
 --SEED Dose--
-INSERT [dbo].[Dose] ([id], [description]) VALUES ('eee374e0-8f3b-4e34-b8b1-09263365b6b7', '2X A DAY')
-INSERT [dbo].[Dose] ([id], [description]) VALUES ('fc5a7dbe-dd86-4187-8fef-12d5b09784d3', '1X A DAY')
-INSERT [dbo].[Dose] ([id], [description]) VALUES ('eb87c2b9-b0bc-46c8-a066-41f815eec939', '3X A DAY')
+INSERT [dbo].[Dose] ([id], [description])
+VALUES ('eee374e0-8f3b-4e34-b8b1-09263365b6b7', '2X A DAY'),
+('fc5a7dbe-dd86-4187-8fef-12d5b09784d3', '1X A DAY'),
+('eb87c2b9-b0bc-46c8-a066-41f815eec939', '3X A DAY')
 
 
 --SEED PROCEDURE TYPE--
 INSERT [dbo].[ProcedureType] ([id], [description]) 
-VALUES (N'faf86416-a34b-48ec-a070-67faf6bd5691', N'X-Ray')
-GO
-INSERT [dbo].[ProcedureType] ([id], [description]) VALUES (N'92fa5a6e-385d-4aa3-b0a2-8791e59d8d3f', N'Blood Test')
-GO
-INSERT [dbo].[ProcedureType] ([id], [description]) VALUES (N'fcbf1757-9410-4a29-a3d9-8bb8580e310f', N'CAT Scan')
-GO
-INSERT [dbo].[ProcedureType] ([id], [description]) VALUES (N'04102b99-b0a8-4201-8dbe-c1c1df116e6c', N'Check Up')
+VALUES ('faf86416-a34b-48ec-a070-67faf6bd5691', 'X-Ray'),
+('92fa5a6e-385d-4aa3-b0a2-8791e59d8d3f', 'Blood Test'),
+('fcbf1757-9410-4a29-a3d9-8bb8580e310f', 'CAT Scan'),
+('04102b99-b0a8-4201-8dbe-c1c1df116e6c', 'Check Up')
 GO
 
 
 --SEED Prescription--
-USE [MedicalHistory]
-GO
-INSERT [dbo].[Prescription] ([id], [medicationId], [doseId], [patientId], [professionalId], [startdate], [endate], [cancelledDate]) VALUES (N'17198429-f2c8-4c81-a003-231bb0e1fa13', N'b2d9c44a-af32-42ed-bced-661e94d0848d', N'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', N'ff443614-2a18-4218-8e51-4140f632bec2', N'ff443614-2a18-4218-8e51-4140f632bec2', CAST(N'2022-02-10T00:00:00.000' AS DateTime), CAST(N'2023-03-01T00:00:00.000' AS DateTime), NULL)
-GO
-INSERT [dbo].[Prescription] ([id], [medicationId], [doseId], [patientId], [professionalId], [startdate], [endate], [cancelledDate]) VALUES (N'f195d261-18a7-4f13-8e6f-7543bcefe278', N'73e65e87-6f83-43e9-9de8-5312e251c28c', N'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', N'fa1f3fd8-737e-428b-a0e9-c74a98a007df', N'ff443614-2a18-4218-8e51-4140f632bec2', CAST(N'2022-02-12T00:00:00.000' AS DateTime), CAST(N'2022-07-12T00:00:00.000' AS DateTime), NULL)
-GO
-INSERT [dbo].[Prescription] ([id], [medicationId], [doseId], [patientId], [professionalId], [startdate], [endate], [cancelledDate]) VALUES (N'6caa1475-60f2-4438-9237-8c52105605e9', N'040d4ae9-d6b4-48de-8f1a-89234d62ce29', N'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', N'13001006-7ec9-42ac-ba8f-4fc9ca40ebb0', N'ff443614-2a18-4218-8e51-4140f632bec2', CAST(N'2022-06-01T00:00:00.000' AS DateTime), CAST(N'2022-09-12T00:00:00.000' AS DateTime), NULL)
+INSERT [dbo].[Prescription] ([id], [medicationId], [doseId], [patientId], [professionalId], [startdate], [endate], [cancelledDate]) VALUES 
+('17198429-f2c8-4c81-a003-231bb0e1fa13', 'b2d9c44a-af32-42ed-bced-661e94d0848d', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', 'ff443614-2a18-4218-8e51-4140f632bec2', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-02-10T00:00:00.000' AS DateTime), CAST('2023-03-01T00:00:00.000' AS DateTime), NULL),
+('f195d261-18a7-4f13-8e6f-7543bcefe278', '73e65e87-6f83-43e9-9de8-5312e251c28c', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', 'fa1f3fd8-737e-428b-a0e9-c74a98a007df', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-02-12T00:00:00.000' AS DateTime), CAST('2022-07-12T00:00:00.000' AS DateTime), NULL),
+('6caa1475-60f2-4438-9237-8c52105605e9', '040d4ae9-d6b4-48de-8f1a-89234d62ce29', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', '13001006-7ec9-42ac-ba8f-4fc9ca40ebb0', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-06-01T00:00:00.000' AS DateTime), CAST('2022-09-12T00:00:00.000' AS DateTime), NULL)
 GO
 
 
@@ -114,13 +109,10 @@ GO
 --GO
 
 --SEED PROCEDURE--
-USE [MedicalHistory]
-GO
-INSERT [dbo].[Procedure] ([id], [patientId], [professionalId], [typeId], [date]) VALUES (N'75250882-e0a2-4bac-9cf1-40a18ffa11fd', N'78e38eee-c61d-476a-8f1b-34227659ef2a', N'94641e75-74f7-4ac3-bb87-8d7f85fb91b1', N'04102b99-b0a8-4201-8dbe-c1c1df116e6c', CAST(N'2023-03-01T00:00:00.000' AS DateTime))
-GO
-INSERT [dbo].[Procedure] ([id], [patientId], [professionalId], [typeId], [date]) VALUES (N'3a832fe4-3f58-4797-a6df-6e7f24cf1577', N'c4f1ea98-62bc-49eb-a233-191052fa481d', N'94641e75-74f7-4ac3-bb87-8d7f85fb91b1', N'faf86416-a34b-48ec-a070-67faf6bd5691', CAST(N'2022-07-12T00:00:00.000' AS DateTime))
-GO
-INSERT [dbo].[Procedure] ([id], [patientId], [professionalId], [typeId], [date]) VALUES (N'3f9e86f6-769d-4c73-8105-a7f6b4ba46fe', N'237dbc51-6140-4909-adff-799e16461f52', N'94641e75-74f7-4ac3-bb87-8d7f85fb91b1', N'fcbf1757-9410-4a29-a3d9-8bb8580e310f', CAST(N'2022-09-12T00:00:00.000' AS DateTime))
+INSERT [dbo].[Procedure] ([id], [patientId], [professionalId], [typeId], [date]) VALUES 
+('75250882-e0a2-4bac-9cf1-40a18ffa11fd', '78e38eee-c61d-476a-8f1b-34227659ef2a', '94641e75-74f7-4ac3-bb87-8d7f85fb91b1', '04102b99-b0a8-4201-8dbe-c1c1df116e6c', CAST('2023-03-01T00:00:00.000' AS DateTime)),
+('3a832fe4-3f58-4797-a6df-6e7f24cf1577', 'c4f1ea98-62bc-49eb-a233-191052fa481d', '94641e75-74f7-4ac3-bb87-8d7f85fb91b1', 'faf86416-a34b-48ec-a070-67faf6bd5691', CAST('2022-07-12T00:00:00.000' AS DateTime)),
+('3f9e86f6-769d-4c73-8105-a7f6b4ba46fe', '237dbc51-6140-4909-adff-799e16461f52', '94641e75-74f7-4ac3-bb87-8d7f85fb91b1', 'fcbf1757-9410-4a29-a3d9-8bb8580e310f', CAST('2022-09-12T00:00:00.000' AS DateTime))
 GO
 
 
