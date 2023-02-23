@@ -237,13 +237,13 @@ SELECT pa.id AS PatientID, p.name AS Name, p.surname as Surname, p.idNumber AS I
 FROM Patient pa
 INNER JOIN dbo.Person p ON pa.id = p.id
 LEFT JOIN Contact c ON c.id = pa.contactId
-LEFT JOIN Prescription pr ON pr.patientId = p.id
+INNER JOIN Prescription pr ON pr.patientId = p.id
 LEFT JOIN Medication m ON pr.medicationId = m.id
 LEFT JOIN Dose d ON d.id = pr.doseId
 GO
 
---SELECT * FROM [Patient_Prescription_History];
---GO
+SELECT * FROM [Patient_Prescription_History];
+GO
 
 --FULL PATIENT PROCEDURE HISTORY VIEW--
 CREATE OR ALTER VIEW [Patient_Procedure_History]
@@ -253,7 +253,7 @@ SELECT p.id AS PatientID, p.name AS Name, p.surname as Surname, p.idNumber AS ID
 FROM Patient pa
 INNER JOIN dbo.Person p ON pa.id = p.id
 LEFT JOIN Contact c ON c.id = pa.contactId
-LEFT JOIN [Procedure] prc ON prc.patientId = p.id
+INNER JOIN [Procedure] prc ON prc.patientId = p.id
 LEFT JOIN ProcedureType prct ON prct.id = prc.typeId;
 GO
 
