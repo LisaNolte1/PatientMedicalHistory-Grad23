@@ -98,10 +98,10 @@ GO
 
 
 --SEED Prescription--
-INSERT [dbo].[Prescription] ([id], [medicationId], [doseId], [patientId], [professionalId], [startdate], [endate], [cancelledDate]) VALUES 
-('17198429-f2c8-4c81-a003-231bb0e1fa13', 'b2d9c44a-af32-42ed-bced-661e94d0848d', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', 'ff443614-2a18-4218-8e51-4140f632bec2', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-02-10T00:00:00.000' AS DateTime), CAST('2023-03-01T00:00:00.000' AS DateTime), NULL),
-('f195d261-18a7-4f13-8e6f-7543bcefe278', '73e65e87-6f83-43e9-9de8-5312e251c28c', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', 'fa1f3fd8-737e-428b-a0e9-c74a98a007df', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-02-12T00:00:00.000' AS DateTime), CAST('2022-07-12T00:00:00.000' AS DateTime), NULL),
-('6caa1475-60f2-4438-9237-8c52105605e9', '040d4ae9-d6b4-48de-8f1a-89234d62ce29', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', '13001006-7ec9-42ac-ba8f-4fc9ca40ebb0', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-06-01T00:00:00.000' AS DateTime), CAST('2022-09-12T00:00:00.000' AS DateTime), NULL)
+INSERT [dbo].[Prescription] ([id], [doseId], [medicationId], [patientId], [professionalId], [startdate], [endate], [cancelledDate]) VALUES 
+('17198429-f2c8-4c81-a003-231bb0e1fa13', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', 'b2d9c44a-af32-42ed-bced-661e94d0848d', 'ff443614-2a18-4218-8e51-4140f632bec2', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-02-10T00:00:00.000' AS DateTime), CAST('2023-03-01T00:00:00.000' AS DateTime), NULL),
+('f195d261-18a7-4f13-8e6f-7543bcefe278', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', '73e65e87-6f83-43e9-9de8-5312e251c28c', 'fa1f3fd8-737e-428b-a0e9-c74a98a007df', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-02-12T00:00:00.000' AS DateTime), CAST('2022-07-12T00:00:00.000' AS DateTime), NULL),
+('6caa1475-60f2-4438-9237-8c52105605e9', 'fc5a7dbe-dd86-4187-8fef-12d5b09784d3', '040d4ae9-d6b4-48de-8f1a-89234d62ce29', '13001006-7ec9-42ac-ba8f-4fc9ca40ebb0', 'ff443614-2a18-4218-8e51-4140f632bec2', CAST('2022-06-01T00:00:00.000' AS DateTime), CAST('2022-09-12T00:00:00.000' AS DateTime), NULL)
 GO
 
 

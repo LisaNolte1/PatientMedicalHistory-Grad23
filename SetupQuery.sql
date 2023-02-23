@@ -146,17 +146,22 @@ GO
 
 CREATE TABLE [dbo].[Prescription](
 	[id] [uniqueidentifier] PRIMARY KEY DEFAULT (newid()),
-	[medicationId] [uniqueidentifier] NOT NULL,
 	[doseId] [uniqueidentifier] NOT NULL,
+	[medicationId] [uniqueidentifier] NOT NULL,
 	[patientId] [uniqueidentifier] NOT NULL,
 	[professionalId] [uniqueidentifier] NOT NULL,
 	[startdate] [datetime] NOT NULL,
-	[endate] [datetime] NOT NULL,
+	[endate] [datetime] NOT NULL, -- endDate :)
 	[cancelledDate] [datetime] NULL,
 	CONSTRAINT [FK_Prescription_Dose] FOREIGN KEY([doseId]) REFERENCES [Dose]([id]),
 	CONSTRAINT [FK_Prescription_Medication] FOREIGN KEY([medicationId]) REFERENCES [Medication]([id]),
 	CONSTRAINT [FK_Prescription_Patient] FOREIGN KEY([patientId]) REFERENCES [Patient]([id]),
 	CONSTRAINT [FK_Prescription_Professional] FOREIGN KEY([professionalId]) REFERENCES [Professional]([id]),
+	CHECK (startdate <= endate),
+	CHECK (startdate <= cancelledDate),
+	CHECK (cancelledDate <= endate)
+	-- This is an auditing problem :)
+	-- CHECK(patientId != professionalId)
 )
 GO
 
@@ -175,23 +180,24 @@ CREATE TABLE [dbo].[Procedure](
 	CONSTRAINT [FK_Procedure_ProcedureType] FOREIGN KEY([typeId]) REFERENCES [ProcedureType]([id]),
 	CONSTRAINT [FK_Procedure_Patient] FOREIGN KEY([patientId]) REFERENCES [Patient]([id]),
 	CONSTRAINT [FK_Procedure_Professional] FOREIGN KEY([professionalId]) REFERENCES [Professional]([id]),
+	-- This is an auditing problem :)
+	-- CHECK(patientId != professionalId)
 )
-GO
-
-USE [MedicalHistory];
 GO
 
 --INSERT NEW PRESCRIPTION--
 CREATE OR ALTER PROCEDURE [dbo].[uspInsertNewPrescription]
-@medicationId uniqueidentifier,
-@patientId uniqueidentifier,
-@professionalId uniqueidentifier,
-@startdate date,
-@endate date,
-@doseId uniqueidentifier
+	@medicationId uniqueidentifier,
+	@patientId uniqueidentifier,
+	@professionalId uniqueidentifier,
+	@startdate date,
+	@endate date,
+	@doseId uniqueidentifier
 AS
-INSERT INTO [dbo].[Prescription](medicationId, patientId, professionalId, startdate, endate, doseId)
-VALUES(@medicationId, @patientId, @professionalId, @startdate, @endate, @doseId);
+BEGIN
+	INSERT INTO [dbo].[Prescription](medicationId, patientId, professionalId, startdate, endate, doseId)
+	VALUES(@medicationId, @patientId, @professionalId, @startdate, @endate, @doseId);
+END
 GO
 
 --SELECT PATIENT DETAILS--
@@ -199,16 +205,13 @@ CREATE OR ALTER PROCEDURE [dbo].[uspGetPatientDetailsByID]
 @patientId uniqueidentifier
 AS
 BEGIN
-SET NOCOUNT ON
-SELECT p.id, pr.name, pr.surname, c.phone, c.email
-FROM Patient p
-INNER JOIN Person pr ON pr.id = p.id
-INNER JOIN Contact c ON c.id = p.contactId
-WHERE p.id = @patientId;
+	SET NOCOUNT ON
+	SELECT p.id, pr.name, pr.surname, c.phone, c.email
+	FROM Patient p
+	INNER JOIN Person pr ON pr.id = p.id
+	INNER JOIN Contact c ON c.id = p.contactId
+	WHERE p.id = @patientId;
 END
-GO
-
-EXEC  uspGetPatientDetailsByID 'EB42BD4C-CF4E-4971-9E9D-13E0B8CBEC65';
 GO
 
 --UPDATE CONTACT DETAILS--
@@ -218,47 +221,41 @@ CREATE OR ALTER PROCEDURE [dbo].[uspUpdateContactDetailsByIDNumber]
 @email nvarchar(255)
 AS
 BEGIN
-DECLARE @patientid uniqueidentifier
+	DECLARE @patientid uniqueidentifier
 
-SELECT @patientid = p.id FROM Person p
-WHERE p.idNumber = @idNumber;
+	SELECT @patientid = p.id FROM Person p
+	WHERE p.idNumber = @idNumber;
 
-UPDATE [dbo].Contact
-SET phone = @phoneNo, email = @email
-WHERE id = @patientid;
+	UPDATE Contact
+	SET phone = @phoneNo, email = @email
+	WHERE id = @patientid;
 END
 GO
 
 --FULL PATIENT HISTORY VIEW--
-CREATE OR ALTER VIEW [Patient_Prescription_History]
+CREATE OR ALTER VIEW [dbo].[Patient_Prescription_History]
 AS
-SELECT pa.id AS PatientID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email, m.name AS [Medication Name],
-	   d.description AS [Medication Doseage], pr.startdate AS [Prescription Start Date], pr.endate AS [Prescription End Date], pr.cancelledDate AS [Prescription Cancelled Date]
-FROM Patient pa
-INNER JOIN dbo.Person p ON pa.id = p.id
-LEFT JOIN Contact c ON c.id = pa.contactId
-INNER JOIN Prescription pr ON pr.patientId = p.id
-LEFT JOIN Medication m ON pr.medicationId = m.id
-LEFT JOIN Dose d ON d.id = pr.doseId
-GO
-
-SELECT * FROM [Patient_Prescription_History];
+	SELECT pa.id AS PatientID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email, m.name AS [Medication Name],
+		d.description AS [Medication Doseage], pr.startdate AS [Prescription Start Date], pr.endate AS [Prescription End Date], pr.cancelledDate AS [Prescription Cancelled Date]
+	FROM Patient pa
+	INNER JOIN dbo.Person p ON pa.id = p.id
+	LEFT JOIN Contact c ON c.id = pa.contactId
+	INNER JOIN Prescription pr ON pr.patientId = p.id
+	LEFT JOIN Medication m ON pr.medicationId = m.id
+	LEFT JOIN Dose d ON d.id = pr.doseId
 GO
 
 --FULL PATIENT PROCEDURE HISTORY VIEW--
-CREATE OR ALTER VIEW [Patient_Procedure_History]
+CREATE OR ALTER VIEW [dbo].[Patient_Procedure_History]
 AS
-SELECT p.id AS PatientID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email,
-	   prc.date AS [Procedure Date], prct.description AS [Procedure Type]
-FROM Patient pa
-INNER JOIN dbo.Person p ON pa.id = p.id
-LEFT JOIN Contact c ON c.id = pa.contactId
-INNER JOIN [Procedure] prc ON prc.patientId = p.id
-LEFT JOIN ProcedureType prct ON prct.id = prc.typeId;
+	SELECT p.id AS PatientID, p.name AS Name, p.surname as Surname, p.idNumber AS IDNumber, c.phone AS PhoneNumber, c.email AS Email,
+		prc.date AS [Procedure Date], prct.description AS [Procedure Type]
+	FROM Patient pa
+	INNER JOIN dbo.Person p ON pa.id = p.id
+	LEFT JOIN Contact c ON c.id = pa.contactId
+	INNER JOIN [Procedure] prc ON prc.patientId = p.id
+	LEFT JOIN ProcedureType prct ON prct.id = prc.typeId;
 GO
-
---SELECT * FROM [Patient_Procedure_History];
---GO
 
 USE [master]
 GO
