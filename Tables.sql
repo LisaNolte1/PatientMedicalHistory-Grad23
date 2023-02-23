@@ -14,8 +14,8 @@ USE [MedicalHistory]
 GO
 
 /* So that Database Diagrams works in SSMS */
-EXEC sp_changedbowner 'sa'
-GO
+--EXEC sp_changedbowner 'sa'
+--GO
 
 CREATE TABLE [dbo].[Person](
 	[id] [uniqueidentifier] PRIMARY KEY DEFAULT (newid()),
